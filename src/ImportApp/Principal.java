@@ -10,9 +10,7 @@ import java.util.Scanner;
 public class Principal {
 
     private final Produto[] produtosList = new Produto[10];
-    protected int atualPosicao = 0;
-
-
+    protected int atualPosicao;
 
     public static void main(String[] args){
         Principal app = new Principal();
@@ -20,7 +18,6 @@ public class Principal {
         app.menuPrincipal();
 
     }
-
 
     private void menuPrincipal(){
         int opcaoUsuario = 0;
@@ -56,13 +53,10 @@ public class Principal {
             //Finaliza o Scanner
         } while (opcaoUsuario != 0);
 
-
-
-
     }
 
-
-    //INICIO METODO PARA APRESENTAR MENU ----------------------
+    //------------------------------------------------------
+    //INICIO METODO PARA APRESENTAR MENU
     private static void titulo(){
         System.out.println("IMPORTAPP SOLUTIONS LTDA\nSISTEMA DE CONTROLE DE ESTOQUE\nOPÇÃO: ");
     }
@@ -84,25 +78,9 @@ public class Principal {
     }
     //FIM METODO PARA APRESENTAR MENU
 
-    //----------------------
+    //------------------------------------------------------
 
     //INICIO METODOS DO MENU PRINCIPAL
-
-    private void relatorios(){
-        titulo();
-        System.out.println("RELATÓRIO");
-
-        for (int i = 0; i < atualPosicao; i++){
-            System.out.println("\n//---------------------//: \n" +
-                    "CÓDIGO: " + i + "\n" +
-                    produtosList[i]);
-        }
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\n\n\n");
-        System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");
-        scanner.next();
-
-    }
 
     private void menuCadastroProduto(){
         int opcao;
@@ -134,7 +112,27 @@ public class Principal {
     }
 
     private void menuMovimentacao(){
-        System.out.println("teste2");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("MOVIMENTAÇÃO DE PRODUTOS EM ESTOQUE");
+        System.out.println("1 - ENTRADA \n" +
+                "2 - SAÍDA\n" +
+                "0 - RETORNAR\n" +
+                "OPÇÃO: \n");
+        int opcao = scanner.nextInt();
+        switch (opcao){
+            case 1:
+                compraDeProdutos();
+                break;
+            case 2:
+                vendaDeProdutos();
+                break;
+            case 0:
+                System.out.println("Retornando ao menu principal");
+                break;
+            default:
+                mensagemInvalida();
+                break;
+        }
 
     }
 
@@ -142,10 +140,25 @@ public class Principal {
         System.out.println("teste3");
 
     }
+
+    private void relatorios(){
+        titulo();
+        System.out.println("RELATÓRIO");
+
+        for (int i = 0; i < atualPosicao; i++){
+            System.out.println("\n//---------------------//: \n" +
+                    "CÓDIGO: " + i + "\n" +
+                    produtosList[i]);
+        }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n\n\n");
+        System.out.println("APERTE QUALQUER LETRA + ENTER PARA CONTINUAR");
+        scanner.next();
+
+    }
     //FIM METODOS DO MENU PRINCIPAL
 
-    //--------------------------
-
+    //------------------------------------------------------
     //INICIO METODOS MENU DE CADASTRO
     private void cadastrarProduto(){
         String escolha = "";
@@ -192,12 +205,6 @@ public class Principal {
         } while (escolha.equalsIgnoreCase("S"));
     }
 
-    private void mensagemConsultaInvalida(boolean controle){
-        if (controle){
-            System.out.println("PRODUTO NÃO ENCONTRADO");
-        }
-    }
-
     private void consultarProduto(){
         String escolha;
         do {
@@ -235,7 +242,7 @@ public class Principal {
             arrayList.add(new Produto());
             for (int i = 0; i < atualPosicao; i++){
                 scanner = new Scanner(System.in);
-                Produto produto = arrayList.get(i);
+                Produto produtos = arrayList.get(i);
 
                 if (nomeConsulta.equalsIgnoreCase(produtosList[i].getNome())){
                     controle = false;
@@ -258,15 +265,86 @@ public class Principal {
         } while (escolha.equalsIgnoreCase("S"));
     }
 
-
-
-    //------------------------------------------------------
-
     //FIM METODOS MENU DE CADASTRO
-
     //------------------------------------------------------
 
-    //Confirmação de operação
+
+    //INICIO METODOS MENU DE MOVIMENTAÇÃO
+    //------------------------------------------------------
+    private void compraDeProdutos(){
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("COMPRA DE PRODUTOS PARA O ESTOQUE");
+
+            System.out.println("INFORME O NOME DO PRODUTO: ");
+            String nomeProduto = scanner.nextLine();
+
+            Produto produtoMovimentacao;
+            boolean controle  = true;
+
+            for (int i = 0; i < atualPosicao; i++){
+                if (nomeProduto.equalsIgnoreCase(produtosList[i].getNome())){
+                    controle = false;
+                    produtoMovimentacao = produtosList[i];
+                    System.out.println("QUANTIDADE ATUAL " + produtoMovimentacao.getQuantidadeEmEstoque());
+                    System.out.println("INFORME A QUANTIDADE A SER ADICIONADA: ");
+                    int quantidadeDeEntrada = scanner.nextInt();
+
+                    System.out.println("NOVA QUANTIDADE: "+ (produtoMovimentacao.getQuantidadeEmEstoque() + quantidadeDeEntrada));
+                    escolha = confirmaOperacao();
+                    if (escolha.equalsIgnoreCase("S")){
+                        produtoMovimentacao.setAdicionarQuantidade(quantidadeDeEntrada);
+                        produtosList[i] = produtoMovimentacao;
+                    }
+                    break;
+                }
+            }
+            mensagemConsultaInvalida(controle);
+            escolha = getRepetirOperacao();
+        }while (escolha.equalsIgnoreCase("S"));
+    }
+
+    private void vendaDeProdutos(){
+        String escolha;
+
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("SAIDA DE PRODUTOS");
+            System.out.println("INFORME O NOME DO PRODUTO: ");
+            String nomeDoProduto = scanner.nextLine();
+
+            boolean controle = true;
+            for (int i = 0; i < atualPosicao; i++){
+                if (nomeDoProduto.equalsIgnoreCase(produtosList[i].getNome())){
+                    controle = false;
+                    Produto produtoMovimentacao = produtosList[i];
+                    System.out.println("QUANTIDADE ATUAL: " + produtoMovimentacao.getQuantidadeEmEstoque());
+                    System.out.println("INFORME A QUANTIDADE A SER RETIRADA: ");
+                    int quantidadeSaida = scanner.nextInt();
+                    System.out.println("QUANTIDADE RESTANTE: " + (produtoMovimentacao.getQuantidadeEmEstoque() - quantidadeSaida));
+                    if (produtoMovimentacao.getQuantidadeEmEstoque() < quantidadeSaida){
+                        System.out.println("IMPOSSÍVEL EXECUTAR ESTA OPERAÇÃO. VALOR EXCEDE O LIMITE EM ESTOQUE.");
+                        break;
+                    }
+                    escolha = confirmaOperacao();
+                    if (escolha.equalsIgnoreCase("S")){
+                        produtoMovimentacao.setDiminuirQuantidade(quantidadeSaida);
+                        produtosList[i] = produtoMovimentacao;
+                    }
+                    break;
+                }
+            }
+            mensagemConsultaInvalida(controle);
+            escolha = getRepetirOperacao();
+        }while(escolha.equalsIgnoreCase("S"));
+    }
+
+    //FIM METODOS MENU DE MOVIMENTAÇÃO
+    //------------------------------------------------------
+
+    //------------------------------------------------------
+    //Métodos auxiliares
 
     private String confirmaOperacao(){
         Scanner scanner = new Scanner(System.in);
@@ -282,6 +360,15 @@ public class Principal {
         System.out.println("REPETIR OPERAÇÃO? (S/N): ");
         escolha = scanner.next();
         return escolha;
+    }
+
+    private void mensagemConsultaInvalida(boolean controle){
+        if (controle){
+            System.out.println("PRODUTO NÃO ENCONTRADO");
+        }
+    }
+    private void mensagemInvalida(){
+        System.out.println("OPÇÃO INVÁLIDA. TENTE NOVAMENTE.");
     }
 
     //Fim confirmação de operação

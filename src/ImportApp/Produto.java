@@ -5,6 +5,7 @@ public class Produto {
     private String nome;
     private float precoUnitario;
     private int unidade;
+    private int quantidadeEmEstoque;
 
 
 
@@ -27,6 +28,22 @@ public class Produto {
     public int getId(){      return id;    }
     public void setId(int id){
         this.id = id;
+    }
+
+    public int getQuantidadeEmEstoque() {
+        return quantidadeEmEstoque;
+    }
+
+    public void setQuantidadeEmEstoque(int quantidadeEmEstoque) {
+        this.quantidadeEmEstoque = quantidadeEmEstoque;
+    }
+
+    public void setAdicionarQuantidade(int quantidade) {
+        this.quantidadeEmEstoque+=quantidade;
+    }
+
+    public void setDiminuirQuantidade(int quantidade) {
+        this.quantidadeEmEstoque-=quantidade;
     }
 
     //Construtor padrão
