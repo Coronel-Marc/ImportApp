@@ -1,4 +1,5 @@
 package ImportApp;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -162,11 +163,100 @@ public class Principal {
         }while (escolha.equalsIgnoreCase("S"));
     }
 
-    private void alterarProduto(){}
+    private void alterarProduto(){
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            titulo();
+            System.out.println("ALTERAÇÃO DE PRODUTO");
+            System.out.println("INFORME O NOME DO PRODUTO: ");
+            String nomeConsulta = scanner.nextLine();
+            boolean controle = true;
 
-    private void consultarProduto(){}
+            for (int i = 0; i < atualPosicao; i++){
 
-    private void excluirProduto(){}
+                if (nomeConsulta.equalsIgnoreCase(produtosList[i].getNome())){
+                    controle = false;
+                    System.out.println("PRODUTO ENCONTRADO\n");
+                    Produto produto = setDadosProduto();
+                    escolha = confirmaOperacao();
+
+                    if (escolha.equalsIgnoreCase("S")){
+                        produtosList[i] = produto;
+                    }
+                    break;
+                }
+            }
+            mensagemConsultaInvalida(controle);
+            escolha = getRepetirOperacao();
+        } while (escolha.equalsIgnoreCase("S"));
+    }
+
+    private void mensagemConsultaInvalida(boolean controle){
+        if (controle){
+            System.out.println("PRODUTO NÃO ENCONTRADO");
+        }
+    }
+
+    private void consultarProduto(){
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            titulo();
+            System.out.println("CONSULTA DE PRODUTO");
+            System.out.println("INFORME O NOME DO PRODUTO A SER PESQUISADO: ");
+            String nomeConsulta = scanner.nextLine();
+
+            boolean controle = true;
+
+            for (int i = 0; i < atualPosicao; i++){
+                if (nomeConsulta.equalsIgnoreCase(produtosList[i].getNome())){
+                    controle = false;
+                    System.out.println(produtosList[i].toString());
+                    break;
+                }
+            }
+            mensagemConsultaInvalida(controle);
+            escolha = getRepetirOperacao();
+        } while (escolha.equalsIgnoreCase("S"));
+    }
+
+    private void excluirProduto(){
+        String escolha;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            titulo();
+            System.out.println("EXCLUSÃO DE PRODUTO");
+            System.out.println("INFOME O NOME DO PRODUTO PARA PESQUISA: ");
+            String nomeConsulta = scanner.nextLine();
+
+            boolean controle = true;
+            ArrayList<Produto> arrayList = new ArrayList<>();
+            arrayList.add(new Produto());
+            for (int i = 0; i < atualPosicao; i++){
+                scanner = new Scanner(System.in);
+                Produto produto = arrayList.get(i);
+
+                if (nomeConsulta.equalsIgnoreCase(produtosList[i].getNome())){
+                    controle = false;
+                    System.out.println(produtosList[i].toString());
+                    System.out.println("CONFIRMA EXCLUSÃO? (S/N): ");
+                    escolha = scanner.next();
+
+                    if (escolha.equalsIgnoreCase("S")){
+                        for (int k = i; k < atualPosicao - 1; k++){
+                            produtosList[k] = produtosList[k + 1];
+                            atualPosicao--;
+                        }
+                    }
+                    break;
+
+                }
+            }
+            mensagemConsultaInvalida(controle);
+            escolha = getRepetirOperacao();
+        } while (escolha.equalsIgnoreCase("S"));
+    }
 
 
 

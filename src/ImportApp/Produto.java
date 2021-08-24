@@ -30,9 +30,7 @@ public class Produto {
     }
 
     //Construtor padrão
-//    public Produto(String nome, float precoUnitario, int unidade) {
-//
-//    }
+    public Produto() {  }
 
     //Construtor do produto
     public Produto(String nome, float precoUnitario, int unidade, int id){
